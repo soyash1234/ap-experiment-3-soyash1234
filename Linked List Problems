@@ -1,0 +1,207 @@
+#Aim:
+To sort a linked list in ascending order.
+
+##Objectives:
+
+Traverse the linked list and store all node values in a vector.
+Sort the vector in ascending order.
+Update the linked list nodes with the sorted values.
+Return the head of the sorted linked list.
+
+###Code
+class Solution {
+public:     
+    ListNode* sortList(ListNode* head) {    
+        vector<int> arr;         
+        ListNode* temp = head;                  
+        while(temp != nullptr){             
+            arr.push_back(temp->val);             
+            temp = temp->next;         
+        }                  
+        sort(arr.begin(), arr.end());                  
+        temp = head;         
+        for(int i = 0; temp != nullptr; i++){             
+            temp->val = arr[i];             
+            temp = temp->next;         
+        }              
+        return head;              
+    } 
+};
+
+#Aim:
+To rotate a linked list to the right by k positions.
+
+##Objectives:
+
+Find the length of the linked list and the last node (tail).
+Adjust k to be within the range of the list length.
+Traverse to the node before the new head after rotation.
+Break the list at the new head and connect the tail to the original head.
+
+###Code
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (!head){
+            return head;
+        }
+        int length=1;
+        ListNode* tail=head;
+        ListNode* cur=head;
+        while (tail->next){
+            tail=tail->next;
+            length++;
+        }
+        k=k%length;
+        if (k==0){
+            return head;
+        }
+        for(int i=0;i<length-k-1;i++){
+            cur=cur->next;
+        }
+        ListNode* newh=cur->next;
+        cur->next=nullptr;
+        tail->next=head;
+        return newh;
+    }
+};
+
+#Aim:
+To reverse a portion of a linked list between positions left and right.
+
+##Objectives:
+
+Create a dummy node and move the pointer prev to just before the left position.
+Set cur to the node at the left position.
+Reverse the nodes between left and right by adjusting the pointers.
+Return the head of the modified linked list.
+
+###Code
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if (!head || left == right) {
+            return head;
+        }
+
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* prev = dummy;
+
+        for (int i = 0; i < left - 1; i++) {
+            prev = prev->next;
+        }
+
+        ListNode* cur = prev->next;
+
+        for (int i = 0; i < right - left; i++) {
+            ListNode* temp = cur->next;
+            cur->next = temp->next;
+            temp->next = prev->next;
+            prev->next = temp;
+        }
+
+        return dummy->next;        
+    }
+};
+
+#Aim:
+To remove all duplicate values from a sorted linked list.
+
+##Objectives:
+
+Create a dummy node and set prev to point to it.
+Traverse the list, skipping over consecutive nodes with the same value.
+If duplicates are found, adjust prev to skip them.
+Return the head of the modified linked list.
+
+###Code
+class Solution {
+ public:
+  ListNode* deleteDuplicates(ListNode* head) {
+    ListNode dummy(0, head);
+    ListNode* prev = &dummy;
+    while (head) {
+      while (head->next && head->val == head->next->val)
+        head = head->next;
+      if (prev->next == head)
+        prev = prev->next;
+      else
+        prev->next = head->next;
+      head = head->next;
+    }
+
+    return dummy.next;
+  }
+};
+
+#Aim:
+To combine k sorted linked lists into one sorted linked list.
+
+##Objectives:
+
+Collect all values from the linked lists into a priority queue.
+Take the smallest value from the queue and create a new node.
+Link the new nodes to form a sorted list.
+Return the head of the merged sorted list.
+
+###Code
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        int n=lists.size();
+        priority_queue<int,vector<int>,greater<int>>q;
+        for(int i=0;i<n;i++){
+            ListNode* temp=lists[i];
+            while(temp!=NULL){
+                q.push(temp->val);
+                temp=temp->next;
+            }
+        }
+        if(!q.empty()){
+        ListNode* ans=new ListNode(q.top());
+        q.pop();
+        ListNode* tempp=ans;
+        while(!q.empty()){
+            int temp=q.top();
+            q.pop();
+            tempp->next=new ListNode(temp);
+           if(tempp->next!=NULL) tempp=tempp->next;
+            
+        }
+        return ans;
+        }
+        else return NULL;
+        
+    }
+};
+
+#Aim:
+To detect if a linked list has a cycle.
+
+##Objectives:
+
+Check if the list is empty or has only one node (no cycle).
+Use two pointers: slow moves one step at a time, and fast moves two steps.
+Traverse the list, comparing slow and fast pointers to check for a cycle.
+Return true if a cycle is detected, otherwise return false.
+
+###Code
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        if (head == NULL || head->next == NULL) {
+            return false;
+        }
+        ListNode* slow = head;
+        ListNode* fast = head->next;
+        while (fast != slow) {
+            if (fast->next == NULL || fast->next->next == NULL) {
+                return false;
+            }
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return true;
+    }
+};
